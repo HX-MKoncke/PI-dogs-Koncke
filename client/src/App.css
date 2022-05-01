@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+/* .App-container{
+  background-image: url('./assets/bkg.jpg');
+  background-repeat:repeat;
+  background-size: cover; 
+  position:absolute;
+} */
