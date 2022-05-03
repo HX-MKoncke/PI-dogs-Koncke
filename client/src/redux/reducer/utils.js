@@ -11,15 +11,43 @@ export const orderDogs = (payload, array) => {
     case "AscendingWeight":
       return array.sort((a, b) => {
         return (
-          parseInt(a.weight.metric.split(" - ")) -
-          parseInt(b.weight.metric.split(" - "))
+          parseInt(
+            b.weight.metric
+              .split(" - ")
+              .filter(function (value) {
+                return !Number.isNaN(value);
+              })
+              .reduce((prev, curr) => (curr += prev))
+          ) -
+          parseInt(
+            a.weight.metric
+              .split(" - ")
+              .filter(function (value) {
+                return !Number.isNaN(value);
+              })
+              .reduce((prev, curr) => (curr += prev))
+          )
         );
       });
     case "DescendingWeight":
       return array.sort((a, b) => {
         return (
-          parseInt(b.weight.metric.split(" - ")) -
-          parseInt(a.weight.metric.split(" - "))
+          parseInt(
+            a.weight.metric
+              .split(" - ")
+              .filter(function (value) {
+                return !Number.isNaN(value);
+              })
+              .reduce((prev, curr) => (curr += prev))
+          ) -
+          parseInt(
+            b.weight.metric
+              .split(" - ")
+              .filter(function (value) {
+                return !Number.isNaN(value);
+              })
+              .reduce((prev, curr) => (curr += prev))
+          )
         );
       });
     default:
@@ -47,69 +75,12 @@ export const searchDog = (name, array) => {
 };
 
 /*
-case "ORDER_DOGS":
-      const sortedArr =
-        action.payload === "asc"
-          ? [...state.dogs].sort(function (a, b) {
-              if (a.name > b.name) {
-                return 1;
-              }
-              if (b.name > a.name) {
-                return -1;
-              }
-              return 0;
-            })
-          : [...state.dogs].sort(function (a, b) {
-              if (a.name > b.name) {
-                return -1;
-              }
-              if (b.name > a.name) {
-                return 1;
-              }
-              return 0;
-            });
-      return {
-        ...state,
-        allDogs: sortedArr,
-      };
-    case "ORDER_BY_WEIGHT":
-      const dog =
-        action.payload === "heaviest"
-          ? [...state.dogs].sort(function (a, b) {
-              if (
-                parseInt(a.weight.metric.split(" - ")[0]) <
-                parseInt(b.weight.metric.split(" - ")[0])
-              ) {
-                return 1;
-              }
-              if (
-                parseInt(b.weight.metric.split(" - ")[0]) <
-                parseInt(a.weight.metric.split(" - ")[0])
-              ) {
-                return -1;
-              }
-
-              return 0;
-            })
-          : [...state.dogs].sort(function (a, b) {
-              console.log(action.payload);
-              if (
-                parseInt(a.weight.metric.split(" - ")[0]) <
-                parseInt(b.weight.metric.split(" - ")[0])
-              ) {
-                return -1;
-              }
-              if (
-                parseInt(b.weight.metric.split(" - ")[0]) <
-                parseInt(a.weight.metric.split(" - ")[0])
-              ) {
-                return 1;
-              }
-
-              return 0;
-            });
-      return {
-        ...state,
-        allDogs: dog,
-      };
-*/
+function compare(cases) {
+    array.sort((a, b) => cases);
+  }
+  function weightAverage(x) {
+    return x.weight.metric.split(" - ").reduce((prev, curr) => {
+      if (typeof x !== "string") return (curr += prev);
+    });
+  }
+ */

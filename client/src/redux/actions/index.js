@@ -23,11 +23,26 @@ export function getTemperamentsList() {
   };
 }
 
+export const getDetail = (id) => {
+  try {
+    return async function (dispatch) {
+      const detail = await axios.get(`http://localhost:3001/dogs/${id}`);
+      return dispatch({
+        type: "GET_DETAIL",
+        payload: detail.data,
+      });
+    };
+  } catch (err) {
+    alert("ID NOT FOUND");
+    console.log(err);
+  }
+};
+
 /*~~~~~~~~~~~~~~POST~~~~~~~~~~~~~~*/
 export function postDog(payload) {
-  return async function (dispatch) {
-    const response = await axios.post("http://localhost:3001/dogs", payload);
-    return response;
+  return async function () {
+    const response = await axios.post("http://localhost:3001/puppy", payload);
+    return { type: "POST_DOG", response };
   };
 }
 
@@ -38,20 +53,6 @@ export const orderDogs = (payload) => {
     payload,
   };
 };
-
-// export function orderByName(payload) {
-//   return {
-//     type: "ORDER_BY_NAME",
-//     payload,
-//   };
-// }
-
-// export function orderByWeight(payload) {
-//   return {
-//     type: "ORDER_BY_WEIGHT",
-//     payload,
-//   };
-// }
 
 /*~~~~~~~~~~~~~~FILTERS~~~~~~~~~~~~~~*/
 export function filterDogsByTemperament(payload) {

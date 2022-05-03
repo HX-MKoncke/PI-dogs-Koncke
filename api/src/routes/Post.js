@@ -10,7 +10,7 @@ router.post("/puppy", async (req, res) => {
     height,
     weight,
     life_span,
-    image: image,
+    image,
     createdInDB,
   });
   temperament.map(async (el) => {

@@ -1,6 +1,16 @@
-.mainContainer{
+/* .mainContainer{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+} */
+
+.cardArea
+{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1100px;
 }
