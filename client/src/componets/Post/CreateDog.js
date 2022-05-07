@@ -1,181 +1,272 @@
-import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { postDog, getTemperamentsList } from "../../redux/actions";
+import React, { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import { postDog, getTemperamentsList } from "../../redux/actions/index";
+import styles from "./CreateDog.module.css";
 
-function validate(input) {
+function validateForm(input) {
   let errors = {};
-  input.name ? (errors.name = "") : (errors.name = "Name is required");
 
-  input.temperaments.length < 1
-    ? (errors.temperaments = "Temperaments is required")
-    : (errors.temperaments = "");
-
-  if (!input.image.includes("http://") && !input.image.includes("https://")) {
-    errors.image = "This is not a image: puppy sad :(";
+  // NAME
+  if (!input.name) {
+    errors.name = "You must type a name";
   } else {
-    errors.image = "";
+    errors.name = "";
   }
 
+  // WEIGHTS
+  if (!input.weight_min) {
+    // weight min
+    errors.weight_min = "Type a valid minimal weight number";
+  } else if (!/\d{1,2}/gi.test(input.weight_min)) {
+    errors.weight_min = "Weight must have min values. Example: '25'";
+  } else {
+    errors.weight_min = "";
+  }
+  if (!input.weight_max) {
+    // weight max
+    errors.weight_max = "Type a valid maxim weight number";
+  } else if (!/\d{1,2}/gi.test(input.weight_max)) {
+    errors.weight_max = "Weight must have max values. Example: '25'";
+  } else {
+    errors.weight_max = "";
+  }
+  // HEIGHTS
+  if (!input.height_min) {
+    // height min
+    errors.height_min = "Type a valid minimal height number";
+  } else if (!/\d{1,2}/gi.test(input.height_min)) {
+    errors.height_min = "Height must have min values. Example: '25'";
+  } else {
+    errors.height_min = "";
+  }
+  if (!input.height_max) {
+    // height max
+    errors.height_max = "Type a valid maxim height number";
+  } else if (!/\d{1,2}/gi.test(input.height_max)) {
+    errors.height_max = "Height must have max values. Example: '25'";
+  } else {
+    errors.height_max = "";
+  }
   return errors;
 }
 
-export default function CreateDog() {
+export default function DogCreation() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const temperaments = useSelector((state) => state.temperaments);
+  const temperament = useSelector((state) => state.temperaments).sort(function (
+    a,
+    b
+  ) {
+    if (a < b) return -1;
+    else return 1;
+  });
   const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    dispatch(getTemperamentsList());
-  }, [dispatch]);
 
   const [input, setInput] = useState({
     name: "",
-    height: 0,
-    weight: 0,
-    temperaments: [],
     image: "",
-    life_span: 0,
+    height_min: "",
+    height_max: "",
+    weight_min: "",
+    weight_max: "",
+    life_span: "",
+    temperament: [],
   });
 
-  function handleOnChange(e) {
-    setInput((input) => ({ ...input, [e.target.name]: e.target.value }));
+  function handleChange(e) {
+    setInput({
+      ...input,
+      [e.target.name]: e.target.value,
+    });
     setErrors(
-      validate({
+      validateForm({
         ...input,
         [e.target.name]: e.target.value,
       })
     );
   }
 
-  function handleSubmit(e) {
-    if (input.name && input.temperaments > 0 && input.image) {
-      e.prevetDefault();
-      dispatch(postDog(input));
-      alert("Puppy has been created");
-      setInput({
-        name: "",
-        height: 0,
-        weight: 0,
-        temperaments: [],
-        image: "",
-        life_span: 0,
-      });
-      history.push("/home");
-    } else {
-      e.prevetDefault();
-      alert("You must to complete ALL params");
-    }
-  }
-
-  function handleSelectTemperaments(e) {
-    setInput((input) => ({
-      ...input,
-      temperaments: [...input.temperaments, e.target.value],
-    }));
-    setErrors(
-      validate({
-        ...input,
-        temperaments: [...input.temperaments, e.target.value],
-      })
-    );
-  }
-
-  function handleDeleteTemperaments(e, d) {
-    e.prevetDefault();
+  function handleSelect(e) {
     setInput({
       ...input,
-      temperaments: input.temperaments.filter((temp) => temp !== d),
+      temperament: [...input.temperament, e.target.value],
     });
   }
 
-  return (
-    <div>
-      <h1>Create puppy</h1>
+  function handleDelete(el) {
+    setInput({
+      ...input,
+      temperament: input.temperament.filter((temp) => temp !== el),
+    });
+  }
 
-      <div>
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <div>
-            <div>
-              <label>Name</label>
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (
+      !errors.name &&
+      !errors.image &&
+      !errors.weight_min &&
+      !errors.height_min &&
+      !errors.weight_max &&
+      !errors.height_max
+    ) {
+      alert("Your dog has been created successfully");
+      dispatch(postDog(input));
+      setInput({
+        name: "",
+        image: "",
+        height_min: "",
+        weight_min: "",
+        height_max: "",
+        weight_max: "",
+        life_span: "",
+        temperament: [],
+      });
+    } else {
+      return alert("Something went wrong. Please try again.");
+    }
+    history.push("/home");
+  }
+
+  useEffect(() => {
+    dispatch(getTemperamentsList());
+  }, [dispatch]);
+
+  return (
+    <Fragment>
+      <div className={styles.mainContainerCreation}>
+        <div>
+          <h2>Create your Woof</h2>
+        </div>
+        <div className={styles.formContainer}>
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <div className={styles.Section}>
+              <label>Name:</label>
               <input
                 type="text"
                 value={input.name}
                 name="name"
-                onChange={(e) => handleOnChange(e)}
+                placeholder="Grand Canadian Bulldog"
+                onChange={(e) => handleChange(e)}
+                required
               />
-              {errors.name && <p>{errors.name}</p>}
+              <div>
+                <p className={styles.error}>{errors.name}</p>
+              </div>
             </div>
-            <div>
-              <label>height</label>
+            <div className={styles.Section}>
+              <label>Image URL:</label>
               <input
-                type="text"
-                value={input.height}
-                name="height"
-                onChange={(e) => handleOnChange(e)}
+                type="url"
+                value={input.image}
+                name="image"
+                placeholder="http://myimageontheweb.com"
+                onChange={(e) => handleChange(e)}
               />
+              <div>
+                <p className={styles.error}>{errors.image}</p>
+              </div>
             </div>
-
-            <div>
-              <label>weight</label>
+            <div className={styles.Section}>
+              <h4>Heights</h4>
+              <label>Min</label>
               <input
-                type="text"
-                value={input.weight}
-                name="weight"
-                onChange={(e) => handleOnChange(e)}
+                type="number"
+                value={input.height_min}
+                name="height_min"
+                placeholder="20"
+                onChange={(e) => handleChange(e)}
+                required
               />
+              <div>
+                <p className={styles.error}>{errors.height_min}</p>
+              </div>
+              <label>Max</label>
+              <input
+                type="number"
+                value={input.height_max}
+                name="height_max"
+                placeholder="50"
+                onChange={(e) => handleChange(e)}
+                required
+              />
+              <div>
+                <p className={styles.error}>{errors.height_max}</p>
+              </div>
             </div>
-
-            <div>
-              <label>life_span</label>
+            <div className={styles.Section}>
+              <h4>Weights</h4>
+              <label>Min</label>
+              <input
+                type="number"
+                value={input.weight_min}
+                name="weight_min"
+                placeholder="15"
+                onChange={(e) => handleChange(e)}
+                required
+              />
+              <div>
+                <p className={styles.error}>{errors.weight_min}</p>
+              </div>
+              <label>Max</label>
+              <input
+                type="number"
+                value={input.weight_max}
+                name="weight_max"
+                placeholder="32"
+                onChange={(e) => handleChange(e)}
+                required
+              />
+              <div>
+                <p className={styles.error}>{errors.weight_max}</p>
+              </div>
+            </div>
+            <div className={styles.Section}>
+              <label>Life Span</label>
               <input
                 type="text"
                 value={input.life_span}
                 name="life_span"
-                onChange={(e) => handleOnChange(e)}
+                placeholder="12 - 15 years"
+                onChange={(e) => handleChange(e)}
               />
             </div>
-
-            <div>
-              <label>image</label>
-              <input
-                type="text"
-                value={input.image}
-                name="image"
-                onChange={(e) => handleOnChange(e)}
-              />
-              {errors.image && <p>{errors.image}</p>}
-            </div>
-            <div>
-              <span>Temperaments</span>
-              <select onChange={(e) => handleSelectTemperaments(e)}>
-                {temperaments.map((d) => (
-                  <option value={d.name} key={d.name}>
-                    {d.name}
-                  </option>
-                ))}
+            <div className={styles.Section}>
+              <label>Temperaments</label>
+              <select
+                onChange={(e) => handleSelect(e)}
+                className={styles.styled_select}
+              >
+                {temperament.map((temp) => {
+                  return (
+                    <option key={temp} name={temp}>
+                      {temp}
+                    </option>
+                  );
+                })}
               </select>
-              {input.temperaments.map((d, i) => (
-                <ul key={i}>
-                  <p>{d}</p>
-                  <button onClick={(e) => handleDeleteTemperaments(e, d)}>
-                    x
-                  </button>
-                </ul>
-              ))}
-              {errors.temperaments && <p>{errors.temperaments}</p>}
+              <div className={styles.sidebar_box}>
+                <h4>You have selected that:</h4>
+                {input.temperament.map((el) => (
+                  <div key={el} className={styles.selectedItems}>
+                    <p>{el}</p>
+                    <button onClick={() => handleDelete(el)}>x</button>
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <div>
-              <button type="submit">Create puppy</button>
-              <Link to={"/home"}>
-                <button>Back to Home</button>
+            <div className={styles.buttonSection}>
+              <Link to="/home">
+                <button className={styles.buttonCancel}>Cancel</button>
               </Link>
+              <button className={styles.button} type="submit">
+                Creat 🐕
+              </button>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </Fragment>
   );
 }

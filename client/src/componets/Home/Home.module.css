@@ -1,9 +1,15 @@
-/* .mainContainer{
+.mainContainer{
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-} */
+  padding: 0px 150px;
+}
+
+.navBar
+{
+  display: flex;
+  align-items: center;
+}
 
 .cardArea
 {
@@ -12,5 +18,93 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  max-width: 1100px;
+  max-width: 1100px; /*!!*/
 }
+
+.filters_orders
+{
+  position: relative;
+  display: flex;
+  padding-top: 10px;
+  padding-left: 240px;
+}
+
+select
+{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  border: 0;
+  background: rgba(44, 44, 44, 0.769);
+  background-image: none;
+}
+
+select::-ms-expand
+{
+  display: none;
+}
+
+.select
+{
+  position: relative;
+  display: flex;
+  width: 15rem;
+  height: 1em;
+  line-height: 1em;
+  background-color: rgba(88, 88, 88, 0.13);
+  overflow: hidden;
+  border-radius: .25rem;
+  margin-left: 10px;
+  box-shadow: 0 0.5rem 1rem #00000058;
+}
+
+select
+{
+  flex: 1;
+  padding: 0 .5rem;
+  color: white;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+.select::after
+{
+  content: '\25BC';
+  position: absolute;
+  color: white;
+  top: 0;
+  right: 0;
+  padding: 0 .5em;
+  background: rgb(16, 16, 16);
+  cursor: pointer;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.select:hover::after
+{
+  color: #5caec1;
+}
+
+.resetBtn
+{
+  display: flex;
+  filter: invert(100%);
+  -webkit-filter: invert(100%);
+  cursor: pointer;
+  height: 17px;
+  width: 17px;
+  margin-left: 10px;
+  justify-content: center;
+  transition: 0.5s;
+}
+
+.resetBtn:hover
+{
+  transform: scale(110%);
+  transform: rotate(180deg);
+}
+

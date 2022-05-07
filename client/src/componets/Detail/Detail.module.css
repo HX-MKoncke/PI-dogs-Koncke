@@ -1,0 +1,83 @@
+.container
+{
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto;
+    padding-bottom: 30px;
+}
+
+.container .card
+{
+    width: 600px;
+    height: 780px;
+    background-color: #212121;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 15px 15px 30px #191919, -15px -15px 30px #292929;
+    transition: border-radius cubic-bezier(0.075, 0.82, 0.165, 1) 1s, transform cubic-bezier(0.075, 0.82, 0.165, 1) 1s;
+}
+
+.container .card:hover
+{
+    border-bottom-right-radius: 50px;
+    border-top-left-radius: 50px;
+    transform: scale(1.05);
+}
+
+.container .card img
+{
+    width: 530px;
+    height: 390px;
+    border-radius: 3%;
+}
+
+.container .card .text
+{
+    padding-top: 40px;
+}
+
+.container .card .temperaments
+{
+    padding-top: 40px;
+}
+
+.container .card h1
+{
+    color: white;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding-top: 30px;
+    padding-bottom: 20px;
+    letter-spacing: 0.07em;
+}
+
+.container .card h2
+{
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    height: 40px;
+    letter-spacing: 0.01em;
+}
+
+.container .card p
+{
+    color: white;
+    font-weight: 500;
+    padding: 0 1rem;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.container .card span.weight
+{
+    padding: 10px;
+}
+.container .card span.height
+{
+    padding: 10px;
+}

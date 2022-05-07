@@ -1,4 +1,4 @@
-import { orderDogs } from "./utils";
+import { orderDogs, filterDogs } from "./utils";
 
 const initialState = {
   dogs: [],
@@ -48,13 +48,9 @@ function rootReducer(state = initialState, action) {
       };
 
     case "FILTER_CREATED":
-      const createdFilter =
-        action.payload === "created"
-          ? state.dogs.filter((el) => el.createdInDB === true)
-          : state.dogs.filter((el) => !el.createdInDB);
       return {
         ...state,
-        allDogs: createdFilter,
+        allDogs: filterDogs(action.payload, state.dogs),
       };
 
     /*~~~~~~~~~~~~~~SEARCH~~~~~~~~~~~~~~*/

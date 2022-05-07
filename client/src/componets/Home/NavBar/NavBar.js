@@ -1,34 +1,32 @@
-import React, { Fragment } from "react";
+import React from "react";
 import styles from "./NavBar.module.css";
-import { Link } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
+import Logo from "../../LandingPage/Logo";
 
 export default function NavBar() {
   return (
-    <Fragment>
-      <div className="search">
-        <div className={styles.TitleAndSearchBar}>
-          <div className={styles.logoAndTitle}>
-            <Link to="/home">
-              <img
-                id="logoHenry"
-                alt="a happy dog icon"
-                className={styles.logo}
-              />
-            </Link>
-            <div>
-              <h1>Woof</h1>
-              <p>The dog's page</p>
-            </div>
+    <div>
+      <nav className={styles.nav}>
+        <a className={styles.a} href="/">
+          <div className={styles.logo}>
+            <Logo />
           </div>
-          <div>
-            <SearchBar />
-          </div>
-        </div>
-        <div className={styles.aboutNavButton}>
-          <Link to="/about">About</Link>
-        </div>
-      </div>
-    </Fragment>
+        </a>
+
+        <ul className={styles.ul}>
+          <li className={styles.li}>
+            <a className={styles.a} href="/home">
+              HOME
+            </a>
+            <a className={styles.a} href="/create">
+              CREATE
+            </a>
+            <a className={styles.a} href="/about">
+              ABOUT
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   );
 }

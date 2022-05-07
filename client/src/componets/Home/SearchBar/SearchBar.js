@@ -19,17 +19,29 @@ export default function SearchBar() {
   }
 
   return (
-    <div className={styles.searchBarObject}>
+    <div className={styles.searchBox}>
       <input
+        className={styles.searchTxt}
         type="text"
         placeholder="Search a dog..."
-        className={styles.input}
         value={dogState}
         onChange={(e) => setDogsState(e.target.value)}
       />
-      <button type="submit" onClick={handleClick}>
-        <span className="material-icons">search</span>
-      </button>
+
+      <a
+        className={styles.searchBtn}
+        type="submit"
+        onClick={handleClick}
+        href="/#"
+      >
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/151/151773.png"
+          width="25px"
+          height="25px"
+          alt="search a dog"
+          onInput=""
+        />
+      </a>
     </div>
   );
 }

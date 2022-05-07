@@ -12,22 +12,35 @@ export default function Pagination({
     pageNumbers.push(i);
   }
   return (
-    <nav>
-      <ul className={styles.crumbs}>
+    <section>
+      <ul className={styles.pagination}>
+        <li
+          className={`${styles.btn} ${styles.prev}`}
+          onClick={() => pagination(currentPage - 1)}
+        >
+          ⪻ Prev
+        </li>
+
         {pageNumbers &&
           pageNumbers.map((number) => (
-            <button className={styles.number} key={number}>
-              <div
-                className={
-                  currentPage === number ? styles.crumb__active : styles.crumb
-                }
-                onClick={() => pagination(number)}
-              >
-                {number}
-              </div>
-            </button>
+            <li
+              key={number}
+              className={`${styles.btn} ${
+                number === currentPage ? styles.active : styles.inactive
+              }`}
+              onClick={() => pagination(number)}
+            >
+              {number}
+            </li>
           ))}
+
+        <li
+          className={`${styles.btn} ${styles.next}`}
+          onClick={() => pagination(currentPage + 1)}
+        >
+          Next ⪼
+        </li>
       </ul>
-    </nav>
+    </section>
   );
 }

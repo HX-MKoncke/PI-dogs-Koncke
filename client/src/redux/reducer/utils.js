@@ -1,3 +1,4 @@
+/*~~~~~~~~~~~~~~ORDERS~~~~~~~~~~~~~~*/
 export const orderDogs = (payload, array) => {
   switch (payload) {
     case "AscendingName":
@@ -54,26 +55,6 @@ export const orderDogs = (payload, array) => {
       return array;
   }
 };
-
-export const filterDogs = (filterCriteria, array) => {
-  switch (filterCriteria) {
-    case "Existing":
-      return array.filter((dog) => typeof dog.id === "number");
-    case "Created":
-      return array.filter((dog) => typeof dog.id === "string");
-    default:
-      return array;
-  }
-};
-
-export const filterByTemperament = (temperament, array) => {
-  return array.filter((dog) => dog.temperament.includes(temperament));
-};
-
-export const searchDog = (name, array) => {
-  return array.filter((dog) => dog.name.toLowerCase() === name.toLowerCase());
-};
-
 /*
 function compare(cases) {
     array.sort((a, b) => cases);
@@ -84,3 +65,24 @@ function compare(cases) {
     });
   }
  */
+
+/*~~~~~~~~~~~~~~FILTERS~~~~~~~~~~~~~~*/
+export const filterByTemperament = (temperament, array) => {
+  return array.filter((dog) => dog.temperament.includes(temperament));
+};
+
+export const filterDogs = (payload, array) => {
+  switch (payload) {
+    case "Existing":
+      return array.filter((el) => !el.createdInDB);
+    case "Created":
+      return array.filter((el) => el.createdInDB === true);
+    default:
+      return array;
+  }
+};
+
+/*~~~~~~~~~~~~~~SEARCH~~~~~~~~~~~~~~*/
+export const searchDog = (name, array) => {
+  return array.filter((dog) => dog.name.toLowerCase() === name.toLowerCase());
+};

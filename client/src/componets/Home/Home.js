@@ -1,11 +1,11 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
 
 import DogCard from "./Cards/Cards";
 import Pagination from "./Pagination/Pagination";
 import NavBar from "./NavBar/NavBar";
+import SearchBar from "./SearchBar/SearchBar";
 import {
   getDogs,
   getTemperamentsList,
@@ -20,7 +20,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const allDogs = useSelector((state) => state.allDogs);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dogsPerPage] = useState(8);
+  const [dogsPerPage] = useState(9);
   const indexOfLastDog = currentPage * dogsPerPage;
   const indexOfFirstDog = indexOfLastDog - dogsPerPage;
   const currentDogs = allDogs.slice(indexOfFirstDog, indexOfLastDog);
@@ -46,6 +46,7 @@ export default function Home() {
   function handleClick(e) {
     e.preventDefault();
     dispatch(getDogs());
+    setCurrentPage(1);
   }
 
   function handleSort(e) {
@@ -69,29 +70,18 @@ export default function Home() {
   }
 
   return (
-    <div className="mainContainer">
-      {/* <div className="REFRESH">
-        <h4 className="REFRESH"> Find by filters:</h4>
-        <div
-          className="REFRESH"
-          onClick={(e) => {
-            handleClick(e);
-          }}
-        >
-          <span className="material-icons refresh">loop</span>
-        </div>
-      </div> */}
-
-      {/* <div>
+    <div className={styles.mainContainer}>
+      <div className={styles.navBar}>
         <NavBar />
-      </div> */}
 
-      {/* <div>
-        <div className="SELECT">
-          <h5 className="SELECT">Order Dogs</h5>
+        <SearchBar />
+      </div>
+
+      <div className={styles.filters_orders}>
+        <div className={styles.select}>
           <select onChange={handleSort}>
             <option defaultValue value="all" hidden>
-              Order
+              Order by...
             </option>
             <option value="AscendingName">A - Z</option>
             <option value="DescendingName">Z - A</option>
@@ -100,25 +90,23 @@ export default function Home() {
           </select>
         </div>
 
-        <div className="SELECT">
-          <h5 className="SELECT">Filter by source</h5>
+        <div className={styles.select}>
           <select
             onChange={(e) => {
               handleFilterCreated(e);
             }}
           >
-            <option defaultValue value="all">
-              All Sources 🐶
+            <option defaultValue value="all" hidden>
+              Source...
             </option>
-            <option value="created">Yours 🐶</option>
-            <option value="inDB">dbase 🐶</option>
+            <option value="Existing">Existing dogs</option>
+            <option value="Created">Yours puppys</option>
           </select>
         </div>
 
-        <div className="SELECT">
-          <h5 className="SELECT">Filter by temperament</h5>
+        <div className={styles.select}>
           <select onChange={handleFilteredByTemp}>
-            <option value="all">All Temperaments</option>
+            <option value="all">Filter by temp...</option>
             {temperaments.map((temp) => {
               return (
                 <option value={temp} key={temp}>
@@ -128,15 +116,14 @@ export default function Home() {
             })}
           </select>
         </div>
-      </div> */}
-
-      <div className="">
-        <Pagination
-          dogsPerPage={dogsPerPage}
-          allDogs={allDogs.length}
-          pagination={pagination}
-          currentPage={currentPage}
-        />
+        <div
+          className={styles.resetBtn}
+          onClick={(e) => {
+            handleClick(e);
+          }}
+        >
+          <img src="https://cdn-icons-png.flaticon.com/512/89/89940.png" />
+        </div>
       </div>
 
       <div className={styles.cardArea}>
@@ -149,21 +136,19 @@ export default function Home() {
               weight={el.weight.metric}
               image={el.image}
               temperament={el.temperament}
-              temperaments={el.temperaments}
             />
           );
         })}
       </div>
 
-      {/* <div className="FORM">
-        <h5 className="FORM">Add a Woof</h5>
-        <div className="FORM">
-          <Link to="/newDog/" className="FORM">
-            <span className="material-icons">add_circle</span>
-            <span className="FORM">Add your Woof</span>
-          </Link>
-        </div>
-      </div> */}
+      <div className="">
+        <Pagination
+          dogsPerPage={dogsPerPage}
+          allDogs={allDogs.length}
+          pagination={pagination}
+          currentPage={currentPage}
+        />
+      </div>
     </div>
   );
 }

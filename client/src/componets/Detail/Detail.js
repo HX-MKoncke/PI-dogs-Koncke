@@ -1,9 +1,9 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, NavLink, useNavigate, Link } from "react-router-dom";
 import { getDetail /*deletePokemon*/ } from "../../redux/actions";
-// import PokemonDetailCard from "./pokemonDetailCard/PokemonDetailCard";
+import NavBar from "../Home/NavBar/NavBar";
+import styles from "./Detail.module.css";
 
 export default function Detail(props) {
   const dispatch = useDispatch();
@@ -14,23 +14,38 @@ export default function Detail(props) {
   }, [props.match.params.id, dispatch]);
 
   return (
-    <div>
-      <Link to="/home">
-        <button>BACK TO HOME</button>
-      </Link>
+    <div className={styles.container}>
+      <div>
+        <NavBar />
+      </div>
 
-      {detail.length ? (
-        <>
-          <h1>name: {detail[0].name}</h1>
-          <img src={detail[0].image} />
-          <h2>weight: {detail[0].weight.metric}</h2>
-          <h2>height: {detail[0].height.metric}</h2>
-          <h2>life span: {detail[0].life_span}</h2>
-          <h3>temperaments: {detail[0].temperament}</h3>
-        </>
-      ) : (
-        <p>JEJE MANDALE</p>
-      )}
+      <div>
+        {detail.length ? (
+          <div className={styles.card}>
+            <h1>{detail[0].name}</h1>
+            <img src={detail[0].image} />
+
+            <div className={styles.text}>
+              <h2>
+                <span className={styles.weight}>
+                  {detail[0].weight.metric} KG{" "}
+                </span>{" "}
+                <span className={styles.height}>
+                  {" "}
+                  {detail[0].height.metric} MTS{" "}
+                </span>
+              </h2>
+
+              <h2>{detail[0].life_span}</h2>
+            </div>
+            <div className={styles.temperaments}>
+              <p>{detail[0].temperament}</p>
+            </div>
+          </div>
+        ) : (
+          <p>JEJE MANDALE</p>
+        )}
+      </div>
     </div>
   );
 }
