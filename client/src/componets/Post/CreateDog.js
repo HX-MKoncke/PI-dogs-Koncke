@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { postDog, getTemperamentsList } from "../../redux/actions/index";
+import NavBar from "../Home/NavBar/NavBar";
 import styles from "./CreateDog.module.css";
 
 function validateForm(input) {
@@ -88,10 +89,13 @@ export default function DogCreation() {
   }
 
   function handleSelect(e) {
-    setInput({
-      ...input,
-      temperament: [...input.temperament, e.target.value],
-    });
+    let oneTemp = input.temperament.find((temp) => temp === e.target.value);
+    if (!oneTemp) {
+      setInput({
+        ...input,
+        temperament: [...input.temperament, e.target.value],
+      });
+    } else alert("Solo puedes seleccionar una vez cada temperamento");
   }
 
   function handleDelete(el) {
@@ -135,19 +139,22 @@ export default function DogCreation() {
 
   return (
     <Fragment>
+      <div>
+        <NavBar />
+      </div>
       <div className={styles.mainContainerCreation}>
         <div>
-          <h2>Create your Woof</h2>
+          <h1 className={styles.label}>CREATE DOG</h1>
         </div>
         <div className={styles.formContainer}>
           <form onSubmit={(e) => handleSubmit(e)}>
             <div className={styles.Section}>
-              <label>Name:</label>
+              <label className={styles.label}>Name</label>
               <input
                 type="text"
                 value={input.name}
                 name="name"
-                placeholder="Grand Canadian Bulldog"
+                placeholder="name..."
                 onChange={(e) => handleChange(e)}
                 required
               />
@@ -156,12 +163,12 @@ export default function DogCreation() {
               </div>
             </div>
             <div className={styles.Section}>
-              <label>Image URL:</label>
+              <label className={styles.label}>Image URL</label>
               <input
                 type="url"
                 value={input.image}
                 name="image"
-                placeholder="http://myimageontheweb.com"
+                placeholder="http://..."
                 onChange={(e) => handleChange(e)}
               />
               <div>
@@ -169,25 +176,29 @@ export default function DogCreation() {
               </div>
             </div>
             <div className={styles.Section}>
-              <h4>Heights</h4>
-              <label>Min</label>
+              <h4 className={styles.label}>Heights</h4>
+              <label className={styles.label}>Min</label>
               <input
                 type="number"
                 value={input.height_min}
                 name="height_min"
-                placeholder="20"
+                placeholder="0..."
+                min="1"
+                max="100"
                 onChange={(e) => handleChange(e)}
                 required
               />
               <div>
                 <p className={styles.error}>{errors.height_min}</p>
               </div>
-              <label>Max</label>
+              <label className={styles.label}>Max</label>
               <input
                 type="number"
                 value={input.height_max}
                 name="height_max"
-                placeholder="50"
+                placeholder="0..."
+                min="1"
+                max="100"
                 onChange={(e) => handleChange(e)}
                 required
               />
@@ -196,25 +207,29 @@ export default function DogCreation() {
               </div>
             </div>
             <div className={styles.Section}>
-              <h4>Weights</h4>
-              <label>Min</label>
+              <h4 className={styles.label}>Weights</h4>
+              <label className={styles.label}>Min</label>
               <input
                 type="number"
                 value={input.weight_min}
                 name="weight_min"
-                placeholder="15"
+                placeholder="0..."
+                min="1"
+                max="100"
                 onChange={(e) => handleChange(e)}
                 required
               />
               <div>
                 <p className={styles.error}>{errors.weight_min}</p>
               </div>
-              <label>Max</label>
+              <label className={styles.label}>Max</label>
               <input
                 type="number"
                 value={input.weight_max}
                 name="weight_max"
-                placeholder="32"
+                placeholder="0..."
+                min="1"
+                max="100"
                 onChange={(e) => handleChange(e)}
                 required
               />
@@ -223,17 +238,17 @@ export default function DogCreation() {
               </div>
             </div>
             <div className={styles.Section}>
-              <label>Life Span</label>
+              <label className={styles.label}>Life Span</label>
               <input
                 type="text"
                 value={input.life_span}
                 name="life_span"
-                placeholder="12 - 15 years"
+                placeholder="Range..."
                 onChange={(e) => handleChange(e)}
               />
             </div>
             <div className={styles.Section}>
-              <label>Temperaments</label>
+              <label className={styles.label}>Temperaments</label>
               <select
                 onChange={(e) => handleSelect(e)}
                 className={styles.styled_select}
@@ -247,7 +262,6 @@ export default function DogCreation() {
                 })}
               </select>
               <div className={styles.sidebar_box}>
-                <h4>You have selected that:</h4>
                 {input.temperament.map((el) => (
                   <div key={el} className={styles.selectedItems}>
                     <p>{el}</p>
@@ -261,7 +275,7 @@ export default function DogCreation() {
                 <button className={styles.buttonCancel}>Cancel</button>
               </Link>
               <button className={styles.button} type="submit">
-                Creat 🐕
+                Create
               </button>
             </div>
           </form>

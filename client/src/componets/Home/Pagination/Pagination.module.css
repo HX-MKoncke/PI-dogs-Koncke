@@ -12,8 +12,9 @@ section
   flex-direction: row;
   flex-wrap: wrap;
   padding: 0.75rem 1rem;
+  padding-left: 27rem;
+  padding-right: 27rem;
   border-radius: 0.5rem;
-  background-color: #2e2e2e1f;
 }
 
 .pagination li

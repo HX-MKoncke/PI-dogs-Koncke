@@ -39,7 +39,6 @@ export default function SearchBar() {
           width="25px"
           height="25px"
           alt="search a dog"
-          onInput=""
         />
       </a>
     </div>

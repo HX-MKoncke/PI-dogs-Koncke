@@ -3,7 +3,7 @@ import axios from "axios";
 /*~~~~~~~~~~~~~~GETS~~~~~~~~~~~~~~*/
 export function getDogs() {
   return async function (dispatch) {
-    var json = await axios.get("http://localhost:3001/dogs");
+    const json = await axios.get("http://localhost:3001/dogs");
     return dispatch({
       type: "GET_DOGS",
       payload: json.data,
@@ -13,12 +13,12 @@ export function getDogs() {
 
 export function getTemperamentsList() {
   return async function (dispatch) {
-    var json = await axios.get("http://localhost:3001/temperament");
-    var listOfTemperaments = json.data.map((el) => el.name);
-    // const temperaments = await axios("http://localhost:3001/temperament");
+    const json = await axios.get("http://localhost:3001/temperament");
+    const temperaments = json.data.map((el) => el.name);
+
     return dispatch({
       type: "GET_TEMPERAMENTS",
-      payload: listOfTemperaments,
+      payload: temperaments,
     });
   };
 }
@@ -58,7 +58,7 @@ export const orderDogs = (payload) => {
 export function filterDogsByTemperament(payload) {
   return async function (dispatch) {
     try {
-      var json = await axios.get(
+      const json = await axios.get(
         `http://localhost:3001/dog/?temperament=${payload}`
       );
       return dispatch({
@@ -93,4 +93,15 @@ export function getDogsByName(name) {
       alert("PUPPY NOT FOUND :C");
     }
   };
+}
+
+export function resetDetail(payload) {
+  return {
+    type: "RESET_DETAIL",
+    payload,
+  };
+}
+
+export function pageIndex(payload) {
+  return { type: "PAG_INDEXES", payload };
 }

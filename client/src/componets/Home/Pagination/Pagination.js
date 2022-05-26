@@ -5,6 +5,12 @@ export default function Pagination({
   allDogs,
   pagination,
   currentPage,
+  handleNext,
+  handleSupNext,
+  handleSupPrev,
+  handlePrev,
+  maxPage,
+  minPage,
 }) {
   const pageNumbers = [];
 
@@ -13,34 +19,57 @@ export default function Pagination({
   }
   return (
     <section>
-      <ul className={styles.pagination}>
-        <li
-          className={`${styles.btn} ${styles.prev}`}
-          onClick={() => pagination(currentPage - 1)}
-        >
-          ⪻ Prev
-        </li>
-
-        {pageNumbers &&
-          pageNumbers.map((number) => (
+      <nav>
+        {pageNumbers.length === 0 ? (
+          <p></p>
+        ) : (
+          <ul className={styles.pagination}>
             <li
-              key={number}
-              className={`${styles.btn} ${
-                number === currentPage ? styles.active : styles.inactive
-              }`}
-              onClick={() => pagination(number)}
+              className={`${styles.btn} ${styles.prev}`}
+              onClick={handleSupPrev}
             >
-              {number}
+              ⪻
             </li>
-          ))}
+            <li className={`${styles.btn} ${styles.prev}`} onClick={handlePrev}>
+              {"<"}
+            </li>
 
-        <li
-          className={`${styles.btn} ${styles.next}`}
-          onClick={() => pagination(currentPage + 1)}
-        >
-          Next ⪼
-        </li>
-      </ul>
+            {pageNumbers?.map((number) => {
+              if (number <= maxPage && number >= minPage) {
+                return (
+                  <li
+                    key={number}
+                    id={number}
+                    className={`${styles.btn} ${
+                      number === currentPage ? styles.active : styles.inactive
+                    }`}
+                    onClick={() => pagination(number)}
+                  >
+                    {number}
+                  </li>
+                );
+              } else {
+                return null;
+              }
+            })}
+
+            <li
+              className={`${styles.btn} ${styles.next}`}
+              onClick={handleNext}
+              disabled={currentPage === Math.ceil(allDogs / dogsPerPage)}
+            >
+              {">"}
+            </li>
+            <li
+              className={`${styles.btn} ${styles.next}`}
+              onClick={handleSupNext}
+              disabled={currentPage === Math.ceil(allDogs / dogsPerPage)}
+            >
+              ⪼
+            </li>
+          </ul>
+        )}
+      </nav>
     </section>
   );
 }

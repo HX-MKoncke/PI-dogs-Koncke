@@ -60,6 +60,17 @@ function rootReducer(state = initialState, action) {
         allDogs: action.payload,
       };
 
+    case "RESET_DETAIL":
+      return {
+        ...state,
+        detail: [],
+      };
+
+    case "PAG_INDEXES":
+      return {
+        ...state,
+      };
+
     default:
       return state;
   }

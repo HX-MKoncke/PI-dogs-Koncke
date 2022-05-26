@@ -12,6 +12,7 @@ import {
   orderDogs,
   filterCreated,
   filterDogsByTemperament,
+  pageIndex,
 } from "../../redux/actions";
 
 import styles from "./Home.module.css";
@@ -23,30 +24,89 @@ export default function Home() {
   const [dogsPerPage] = useState(9);
   const indexOfLastDog = currentPage * dogsPerPage;
   const indexOfFirstDog = indexOfLastDog - dogsPerPage;
+  const pagesDisplayLimit = 5;
+  const [maxPage, setMaxPage] = useState(5);
+  const [minPage, setMinPage] = useState(1);
   const currentDogs = allDogs.slice(indexOfFirstDog, indexOfLastDog);
   const pagination = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  const [, /*refreshState*/ setRefreshState] = useState(true);
+  let lastpage = [];
+  for (let i = 1; i <= Math.ceil(allDogs.length / dogsPerPage); i++) {
+    // la ultima pagina, esto lo uso de indice para mi nextSup
+    lastpage.push(i);
+  }
+  const [, setRefreshState] = useState(true);
 
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   const temperaments = useSelector((state) => state.temperaments).sort(
     function (a, b) {
       if (a < b) return -1;
       else return 1;
     }
   );
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   useEffect(() => {
     dispatch(getDogs());
     dispatch(getTemperamentsList());
   }, [dispatch]);
 
+  useEffect(
+    () => dispatch(pageIndex(indexOfFirstDog, indexOfLastDog)),
+    [indexOfFirstDog, indexOfLastDog, dispatch]
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+    setMaxPage(5);
+    setMinPage(1);
+  }, [allDogs]);
+
+  const handleSupPrev = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+      setMaxPage(5);
+      setMinPage(1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+      if (currentPage - 1 < minPage) {
+        setMaxPage(
+          maxPage - pagesDisplayLimit < 5 ? 5 : maxPage - pagesDisplayLimit
+        );
+        setMinPage(
+          minPage - pagesDisplayLimit <= 0 ? 1 : minPage - pagesDisplayLimit
+        );
+      }
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage !== lastpage.length) {
+      setCurrentPage(currentPage + 1);
+      if (currentPage + 1 > maxPage) {
+        setMaxPage(maxPage + pagesDisplayLimit);
+        setMinPage(minPage + pagesDisplayLimit);
+      }
+    }
+  };
+
+  const handleSupNext = () => {
+    const lastPage = lastpage.length;
+    if (currentPage !== lastPage) {
+      setCurrentPage(lastPage);
+      setMaxPage(lastPage);
+      setMinPage(lastPage - pagesDisplayLimit + 1);
+    }
+  };
+
   function handleClick(e) {
     e.preventDefault();
     dispatch(getDogs());
     setCurrentPage(1);
+    setRefreshState((prevState) => !prevState);
   }
 
   function handleSort(e) {
@@ -70,85 +130,114 @@ export default function Home() {
   }
 
   return (
-    <div className={styles.mainContainer}>
-      <div className={styles.navBar}>
-        <NavBar />
+    <div>
+      {allDogs.length ? (
+        <div className={styles.mainContainer}>
+          <div className={styles.navBar}>
+            <NavBar />
 
-        <SearchBar />
-      </div>
+            <SearchBar />
+          </div>
 
-      <div className={styles.filters_orders}>
-        <div className={styles.select}>
-          <select onChange={handleSort}>
-            <option defaultValue value="all" hidden>
-              Order by...
-            </option>
-            <option value="AscendingName">A - Z</option>
-            <option value="DescendingName">Z - A</option>
-            <option value="AscendingWeight">Chubby Dogs</option>
-            <option value="DescendingWeight">Skinny Dogs</option>
-          </select>
-        </div>
+          <div className={styles.foContainer}>
+            <div className={styles.filters_orders}>
+              <div className={styles.select}>
+                <select onChange={handleSort}>
+                  <option defaultValue value="all" hidden>
+                    Order by...
+                  </option>
+                  <option value="AscendingName">A - Z</option>
+                  <option value="DescendingName">Z - A</option>
+                  <option value="AscendingWeight">Chubby Dogs</option>
+                  <option value="DescendingWeight">Skinny Dogs</option>
+                </select>
+              </div>
 
-        <div className={styles.select}>
-          <select
-            onChange={(e) => {
-              handleFilterCreated(e);
-            }}
-          >
-            <option defaultValue value="all" hidden>
-              Source...
-            </option>
-            <option value="Existing">Existing dogs</option>
-            <option value="Created">Yours puppys</option>
-          </select>
-        </div>
+              <div className={styles.select}>
+                <select
+                  onChange={(e) => {
+                    handleFilterCreated(e);
+                  }}
+                >
+                  <option defaultValue value="all" hidden>
+                    Source...
+                  </option>
+                  <option value="Existing">Existing dogs</option>
+                  <option value="Created">Yours puppys</option>
+                </select>
+              </div>
 
-        <div className={styles.select}>
-          <select onChange={handleFilteredByTemp}>
-            <option value="all">Filter by temp...</option>
-            {temperaments.map((temp) => {
+              <div className={styles.select}>
+                <select onChange={handleFilteredByTemp}>
+                  <option defaultValue value="all">
+                    Filter by temp...
+                  </option>
+                  {temperaments.map((temp) => {
+                    return (
+                      <option value={temp} key={temp}>
+                        {temp}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <div
+                className={styles.resetBtn}
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/89/89940.png"
+                  alt="icon"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.cardArea}>
+            {currentDogs.map((el) => {
               return (
-                <option value={temp} key={temp}>
-                  {temp}
-                </option>
+                <DogCard
+                  key={el.id}
+                  id={el.id}
+                  name={el.name}
+                  weight_min={el.weight_min}
+                  weight_max={el.weight_max}
+                  image={el.image}
+                  temperament={el.temperament}
+                  temperaments={el.temperaments}
+                />
               );
             })}
-          </select>
-        </div>
-        <div
-          className={styles.resetBtn}
-          onClick={(e) => {
-            handleClick(e);
-          }}
-        >
-          <img src="https://cdn-icons-png.flaticon.com/512/89/89940.png" />
-        </div>
-      </div>
+          </div>
 
-      <div className={styles.cardArea}>
-        {currentDogs.map((el) => {
-          return (
-            <DogCard
-              key={el.id}
-              id={el.id}
-              name={el.name}
-              weight={el.weight.metric}
-              image={el.image}
-              temperament={el.temperament}
+          <div className="">
+            <Pagination
+              dogsPerPage={dogsPerPage}
+              allDogs={allDogs.length}
+              pagination={pagination}
+              currentPage={currentPage}
+              handlePrev={handlePrev}
+              handleSupPrev={handleSupPrev}
+              handleNext={handleNext}
+              handleSupNext={handleSupNext}
+              maxPage={maxPage}
+              minPage={minPage}
             />
-          );
-        })}
-      </div>
-
-      <div className="">
-        <Pagination
-          dogsPerPage={dogsPerPage}
-          allDogs={allDogs.length}
-          pagination={pagination}
-          currentPage={currentPage}
-        />
-      </div>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.loader}>
+          <div className={styles.loader_square}></div>
+          <div className={styles.loader_square}></div>
+          <div className={styles.loader_square}></div>
+          <div className={styles.loader_square}></div>
+          <div className={styles.loader_square}></div>
+          <div className={styles.loader_square}></div>
+          <div className={styles.loader_square}></div>
+        </div>
+      )}
     </div>
   );
 }
